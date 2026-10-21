@@ -333,9 +333,9 @@ def collect_facebook(country: str, group_id: str) -> list[dict]:
         title = clean(re.sub(r"\s*- Facebook$", "", item["title"]), 180)
         content = title + " " + body
         # Account trading is common in these groups and is not game feedback.
-        if re.search(r"ขาย|รับซื้อ|ซื้อID|ซื้อไอดี|ราคาร้อน|GG GACHA|^\d+\s*โดน|ไอดีเกม|บัญชีขาย|售|帳號|账号|賣帳|透過中介|交易平台|不連接|ไม่เชื่อม|ยังไม่เชื่อม", content, re.I):
+        if re.search(r"ขาย|รับซื้อ|ซื้อID|ซื้อไอดี|ราคาร้อน|GG GACHA|^\d+\s*โดน|ไอดีเกม|บัญชีขาย|售|帳號|账号|賣帳|透過中介|交易平台|不連接|ไม่เชื่อม|ยังไม่เชื่อม|ยังไม่เขื่อม|\d+\s*ไอดี\s*\d+|^\d{3,5}\s*(?:Line|เชื่อมไลน์|มาเอาไป)|寶石號|純G登|8591|\bSell\s*\d+|Price is negotiable|\b7-11\b", content, re.I):
             return None
-        if len(title) < 4 or not body and len(title) < 12:
+        if re.fullmatch(r"\d{3,6}", title) or len(title) < 4 or not body and len(title) < 12:
             return None
         return {"id": f"{country}:fb:{item['id_number']}", "country": country, "source": "Facebook 그룹", "source_id": f"facebook-{country}", "url": url, "title": title, "text": body or item["snippet"], "published_at": item["published_at"], "rating": None, "snippet_only": True, "date_approximate": True}
     with ThreadPoolExecutor(max_workers=4) as pool:
