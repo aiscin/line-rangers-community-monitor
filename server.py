@@ -35,7 +35,16 @@ BAHAMUT = "https://m.gamer.com.tw/forum/B.php?bsn=25967"
 PANTIP = "https://pantip.com/search?q=LINE%20Rangers&timebias=true"
 SPGAME = "https://app-spgame.net/user_review/detail/?gid=1354&order=0"
 NAVER = "https://cafe.naver.com/linerangers1004"
+FACEBOOK_TH = "https://www.facebook.com/groups/1216791171685249/"
+FACEBOOK_TW = "https://www.facebook.com/groups/385613083508950/"
+X_JP = "https://x.com/search?q=LINE%E3%83%AC%E3%83%B3%E3%82%B8%E3%83%A3%E3%83%BC&f=live"
 SOURCE_URLS = {"th": PANTIP, "tw": BAHAMUT, "jp": SPGAME, "kr": NAVER}
+SOURCE_DEFS = {
+    "pantip-search": ("th", PANTIP), "facebook-th": ("th", FACEBOOK_TH),
+    "bahamut": ("tw", BAHAMUT), "facebook-tw": ("tw", FACEBOOK_TW),
+    "spgame": ("jp", SPGAME), "x-jp": ("jp", X_JP),
+    "naver-kr": ("kr", NAVER),
+}
 
 # Each category has conservative topic triggers and human-readable signals.
 # Matching a topic alone never determines sentiment.
@@ -44,31 +53,31 @@ TOPIC_RULES = {
         ("콜라보·이벤트", r"콜라보|이벤트|복각|合作|聯名|活動|イベント|コラボ|event|collab|กิจกรรม|อีเวนต์|คอลแลบ"),
     ],
     "gacha": [
-        ("가챠·상품", r"가챠|뽑기|확률|천장|패키지|현질|과금|루비|ガチャ|課金|確率|天井|ルビー|抽|轉蛋|機率|課金|禮包|儲值|付費|ราคา|เติม|สุ่ม|แพค|แพ็ก|รูบี|ruby|gacha|gem|purchas"),
+        ("가챠·상품", r"가챠|뽑기|확률|천장|패키지|현질|과금|루비|ガチャ|課金|確率|天井|ルビー|抽|轉蛋|機率|課金|禮包|儲值|付費|ราคา|เติม|สุ่ม|กาชา|แพค|แพ็ก|รูบี|ruby|gacha|gem|purchas"),
     ],
     "meta": [
-        ("PvP·메타", r"pvp|PVP|밸런스|장비|캐릭|덱|육성|競技|對戰|公會戰|角色|裝備|隊伍|練角|装備|キャラ|バランス|スキル|ทีม|อุปกรณ์|สกิล|สมดุล"),
+        ("PvP·메타", r"pvp|PVP|밸런스|장비|캐릭|덱|육성|競技|對戰|公會戰|角色|裝備|隊伍|練角|装備|キャラ|バランス|スキル|อุปกรณ์|สกิล|สมดุล"),
     ],
     "return": [
-        ("신규·복귀", r"초보|뉴비|신규|복귀|新手|回鍋|入門|初心者|復帰|新規|育成|新手|มือใหม่|กลับมาเล่น|復活|starter|beginner|return"),
+        ("신규·복귀", r"초보|뉴비|신규|복귀|新手|回鍋|入門|初心者|復帰|育成|新手|มือใหม่|กลับมาเล่น|復活|starter|beginner|return"),
     ],
     "quality": [
-        ("품질·CS", r"환불|정지|접속|로그인|팅기|튕기|오류|버그|문의|업데이트.{0,20}(안|못|튕)|閃退|無法(?:玩|登入|連線|進入|使用)|不能登入|連線|異常|BUG|バグ|ログイン|起動|ロード|不具合|落ちる|接続|サポート|入れない|開かない|開けない|固まる|広告|เข้าไม่ได้|เข้า\s*ID|เข้า.{0,20}ไม่ได้|ล็อคอิน|ล็อกอิน|โดนหัก|ไม่ได้ของ|โกง|ชำระ|ติดต่อ|error|crash|bug|login|support|refund"),
+        ("품질·CS", r"환불|정지|접속|로그인|팅기|튕기|오류|버그|문의|업데이트.{0,20}(안|못|튕)|閃退|無法(?:玩|登入|連線|進入|使用)|不能登入|連線|異常|BUG|バグ|ログイン|起動|ロード|不具合|落ちる|接続|サポート|入れない|開かない|開けない|固まる|広告|เข้าไม่ได้|เข้า\s*ID|เข้า.{0,20}ไม่ได้|ล็อคอิน|ล็อกอิน|โดนหัก|ไม่ได้ของ|โหลดนาน|อัพเดต.{0,20}(นาน|ไม่ได้)|โกง|ชำระ|ติดต่อ|error|crash|bug|login|support|refund"),
     ],
     "social": [
-        ("길드·소셜", r"길드|친구|모집|公會|好友|招募|朋友|ギルド|友達|フレンド|กิลด์|เพื่อน|guild|friend|clan"),
+        ("길드·소셜", r"길드|친구|모집|公會|好友|招募|朋友|ギルド|友達|フレンド|กิลด์|หากิล|เพื่อน|guild|friend|clan"),
     ],
 }
 NEGATIVE = {
     "th": [(r"โกง|หลอก|ฟ้อง|แบนเกม|เสียความรู้สึก", 3), (r"ไม่ได้|เข้าไม่ได้|หาย|เลิกเล่น|แย่|แพง|บั๊ก|บัค|ผิดหวัง|ไม่ตอบ|ล่ม|ตังค์โดนหัก", 2)],
-    "tw": [(r"閃退|無法|不能|故障|異常|騙|詐|退坑|不想玩|垃圾|坑錢", 3), (r"失望|太貴|糟|很爛|不值|連線問題|卡住|壞|難玩|沒用", 2)],
-    "jp": [(r"バグ|起動しない|ログインできない|入れない|詐欺|最悪|ゴミ|課金圧", 3), (r"つまらない|高すぎ|不具合|重い|長すぎ|不満|苦痛|ストレス|やめとけ|遊びづらい", 2)],
+    "tw": [(r"閃退|無法|不能|故障|異常|騙|詐|退坑|不想玩|垃圾|坑錢|一隻都沒中", 3), (r"失望|太貴|糟|很爛|不值|連線問題|卡住|壞|難玩|沒用|太瞎", 2)],
+    "jp": [(r"バグ|起動しない|ログインできない|入れない|詐欺|最悪|ゴミ|課金圧", 3), (r"つまらない|高すぎ|不具合|重い|長すぎ|不満|苦痛|ストレス|やめとけ|遊びづらい|確率低|心配", 2)],
     "kr": [(r"환불|정지당|접속.{0,15}안|로그인.{0,15}안|계속\s*팅기|계속\s*튕기|사기|망겜", 3), (r"불편|오류|버그|너무 비싸|안 됩니다|안되나요|문제", 2)],
 }
 POSITIVE = {
     "th": [(r"สนุก|ชอบ|ดีมาก|คุ้ม|ขอบคุณ|ยอดเยี่ยม", 2)],
     "tw": [(r"好玩|很棒|不錯|值得|佛心", 2)],
-    "jp": [(r"楽しい|面白い|最高|良い|好き|嬉しい|ありがとう|遊びやすい", 2)],
+    "jp": [(r"楽しい|面白い|最高|良い|好き|嬉しい|ありがとう|遊びやすい|取れちゃいました", 2)],
     "kr": [(r"재밌|재미있|좋아요|만족|최고|고맙|감사합니다", 2)],
 }
 ISSUES = {
@@ -268,6 +277,121 @@ def collect_kr() -> list[dict]:
     return list(posts.values())
 
 
+def yahoo_results(query: str) -> list[dict]:
+    """Public search results used only to discover individual social posts."""
+    response = requests.get("https://search.yahoo.co.jp/search", params={"p": query}, headers={"User-Agent": "Mozilla/5.0"}, timeout=25)
+    response.raise_for_status()
+    soup = BeautifulSoup(response.text, "html.parser")
+    if not soup.title or "Yahoo" not in soup.title.get_text():
+        raise RuntimeError("검색 결과를 확인할 수 없습니다")
+    results = []
+    for item in soup.select("ol li"):
+        link = item.select_one("a[href^='https://']")
+        if not link:
+            continue
+        date = item.select_one(".util-Text--sub")
+        detail = link.find_next_sibling("div")
+        results.append({"url": link.get("href", ""), "title": clean(link.get_text(" ", strip=True), 180), "snippet": clean(detail.get_text(" ", strip=True), 700) if detail else "", "date_label": clean(date.get_text(" ", strip=True)) if date else ""})
+    return results
+
+
+def parse_yahoo_date(label: str) -> str | None:
+    dated = re.search(r"(\d{4})/(\d{1,2})/(\d{1,2})", label)
+    if dated:
+        try:
+            return datetime(*map(int, dated.groups()), tzinfo=KST).isoformat()
+        except ValueError:
+            return None
+    relative = re.search(r"(\d+)\s*(日|時間|分)前", label)
+    if not relative:
+        return None
+    amount, unit = int(relative.group(1)), relative.group(2)
+    delta = timedelta(days=amount) if unit == "日" else timedelta(hours=amount) if unit == "時間" else timedelta(minutes=amount)
+    return (now() - delta).isoformat()
+
+
+def collect_facebook(country: str, group_id: str) -> list[dict]:
+    terms = (["LINE Rangers", "2026 กิลด์", "2026 มือใหม่", "2026 อัพเดต", "2026 กาชา"] if country == "th"
+             else ["銀河特攻隊", "2026 合作", "2026 角色", "2026 閃退", "2026 抽"])
+    candidates = {}
+    for term in terms:
+        for item in yahoo_results(f"site:facebook.com/groups/{group_id}/posts/ {term}"):
+            match = re.search(rf"facebook\.com/groups/{group_id}/posts/(\d+)", item["url"])
+            published = parse_yahoo_date(item["date_label"])
+            if match and published and datetime.fromisoformat(published) >= now() - timedelta(days=WINDOW_DAYS):
+                candidates[match.group(1)] = {**item, "published_at": published, "id_number": match.group(1)}
+    def detail(item: dict) -> dict | None:
+        url = f"https://www.facebook.com/groups/{group_id}/posts/{item['id_number']}/"
+        try:
+            response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=20)
+            response.raise_for_status()
+            soup = BeautifulSoup(response.text, "html.parser")
+            desc = soup.find("meta", property="og:description")
+            body = clean(desc.get("content", ""), 1200) if desc else ""
+        except Exception:
+            body = ""
+        title = clean(re.sub(r"\s*- Facebook$", "", item["title"]), 180)
+        content = title + " " + body
+        # Account trading is common in these groups and is not game feedback.
+        if re.search(r"ขาย|รับซื้อ|ซื้อID|ซื้อไอดี|ราคาร้อน|GG GACHA|^\d+\s*โดน|ไอดีเกม|บัญชีขาย|售|帳號|账号|賣帳|透過中介|交易平台|不連接|ไม่เชื่อม|ยังไม่เชื่อม", content, re.I):
+            return None
+        if len(title) < 4 or not body and len(title) < 12:
+            return None
+        return {"id": f"{country}:fb:{item['id_number']}", "country": country, "source": "Facebook 그룹", "source_id": f"facebook-{country}", "url": url, "title": title, "text": body or item["snippet"], "published_at": item["published_at"], "rating": None, "snippet_only": True, "date_approximate": True}
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        posts = [post for post in pool.map(detail, list(candidates.values())[:24]) if post]
+    return posts
+
+
+def collect_fb_th() -> list[dict]:
+    return collect_facebook("th", "1216791171685249")
+
+
+def collect_fb_tw() -> list[dict]:
+    return collect_facebook("tw", "385613083508950")
+
+
+def collect_x_jp() -> list[dict]:
+    queries = [
+        "site:x.com/ LINEレンジャー バグ 2026 -LINE_Rangers_JP",
+        "site:x.com/ LINEレンジャー PVP 2026 -LINE_Rangers_JP",
+        "site:x.com/ LINEレンジャー ギルド 2026 -LINE_Rangers_JP",
+        "site:x.com/ LINEレンジャー ガチャ 2026 -LINE_Rangers_JP",
+        "site:x.com/BED2_2_Ranger/status/ LINEレンジャー",
+        "site:x.com/Dnkz15/status/ LINEレンジャー",
+        "site:x.com/taro_channel777/status/ LINEレンジャー",
+    ]
+    candidates = {}
+    for query in queries:
+        for item in yahoo_results(query):
+            match = re.search(r"x\.com/([^/]+)/status/(\d+)", item["url"])
+            if match and match.group(1).lower() not in {"line_rangers_jp", "linegame_japan", "line_omaren_jp", "gamewith_review"}:
+                candidates[match.group(2)] = match.group(1)
+    def detail(pair: tuple[str, str]) -> dict | None:
+        ident, handle = pair
+        if handle.lower() in {"line_rangers_jp", "linegame_japan", "line_omaren_jp", "gamewith_review"}:
+            return None
+        try:
+            response = requests.get(f"https://cdn.syndication.twimg.com/tweet-result?id={ident}&token=a", timeout=20, headers={"User-Agent": "Mozilla/5.0"})
+            response.raise_for_status()
+            data = response.json()
+            body = clean(data.get("text", ""), 1400)
+            if not re.search(r"LINEレンジャー|ラインレンジャー", body, re.I) or re.search(r"LINE\s*おまかせ\s*レンジャー", body):
+                return None
+            author = data.get("user", {}).get("screen_name", handle)
+            if author.lower() in {"line_rangers_jp", "linegame_japan", "line_omaren_jp", "gamewith_review"}:
+                return None
+            published = datetime.fromisoformat(data["created_at"].replace("Z", "+00:00")).astimezone(KST).isoformat()
+            if datetime.fromisoformat(published) < now() - timedelta(days=WINDOW_DAYS):
+                return None
+            title = clean(re.sub(r"https://t\.co/\S+", "", body).split("\n")[0], 150)
+            return {"id": "jp:x:" + ident, "country": "jp", "source": "X", "source_id": "x-jp", "url": f"https://x.com/{author}/status/{ident}", "title": title or "LINE Rangers 관련 글", "text": body, "published_at": published, "rating": None}
+        except (requests.RequestException, ValueError, KeyError):
+            return None
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        return [post for post in pool.map(detail, list(candidates.items())[:50]) if post]
+
+
 def classify(post: dict) -> dict:
     country = post["country"]
     post.setdefault("source_id", {"th": "pantip-search", "tw": "bahamut", "jp": "spgame", "kr": "naver-kr"}[country])
@@ -286,7 +410,7 @@ def classify(post: dict) -> dict:
         if country == "tw" and "【問題】" in post["title"]:
             positive = 0  # A help request is not praise for the game.
         sentiment = "negative" if negative > positive and negative >= 2 else "positive" if positive > negative and positive >= 2 else "mixed" if negative and positive else "neutral"
-        basis = "표현 사전" if sentiment != "neutral" else "명확한 평가 표현 없음"
+        basis = ("공개 미리보기 표현 사전" if post.get("snippet_only") else "표현 사전") if sentiment != "neutral" else "명확한 평가 표현 없음"
     post["categories"] = matched
     post["sentiment"] = sentiment
     post["basis"] = basis
@@ -332,6 +456,9 @@ def mention_summary(post: dict, category: str) -> str:
     content = post["title"] + " " + post["text"]
     rules = {
         "quality": [
+            (r"流れ星が降ってこないバグ", "유성 효과가 나타나지 않는 버그를 제보"),
+            (r"更新後.{0,40}閃退|完全玩不了.{0,40}閃退", "업데이트 후 플레이 중 여러 번 튕겨 게임을 하기 어렵다고 호소"),
+            (r"โหลดนานหลังอัพเดต|โหลดนาน", "업데이트 후 로딩이 길어졌다고 질문"),
             (r"환불", "결제 환불 처리와 게임 계정 조치에 관해 도움을 요청"),
             (r"업데이트.{0,35}(팅기|튕기)|계속\s*(팅기|튕기)", "업데이트 후 게임이 계속 종료된다고 제보"),
             (r"라인 계정 문의", "LINE 계정 연동·이용 문제를 문의"),
@@ -347,6 +474,10 @@ def mention_summary(post: dict, category: str) -> str:
             (r"ロード長い|遊びづらい|合成に時間", "합성·반복 작업과 긴 로딩으로 플레이가 불편하다고 지적"),
         ],
         "gacha": [
+            (r"ガチャチケ1発.{0,35}取れちゃいました", "가챠 티켓 한 장으로 원하는 캐릭터를 얻었다고 기뻐함"),
+            (r"確率低かった|★9.{0,50}確率", "★9 장비 출시 후 뽑기 확률을 걱정"),
+            (r"五十幾抽.{0,25}一隻都沒中", "50여 회 뽑았지만 원하는 캐릭터를 얻지 못해 확률에 불만"),
+            (r"มือใหม่.{0,40}กาชา|มือใหม่.{0,40}สุ่ม", "초보 유저가 가챠에 재화를 쓸지 조언을 요청"),
             (r"패키지|현질", "유료 패키지 구매·환불 경험을 언급"),
             (r"가챠|뽑기|확률|천장", "뽑기 결과나 확률·비용을 언급"),
             (r"ガチャから星7|天井引き下げ|ピックアップ確率", "★7 가챠 결과와 천장·픽업 확률 개선을 요구"),
@@ -357,14 +488,17 @@ def mention_summary(post: dict, category: str) -> str:
             (r"出現機率提升|機率提升", "콜라보 캐릭터 등장 확률 상승 정보를 공유"),
         ],
         "collab": [
+            (r"次のコラボは.{0,25}怪獣8号", "다음 콜라보가 ‘괴수 8호’일지 추측"),
+            (r"合作角都沒有復刻", "콜라보 캐릭터 복각이 없는 이유를 질문"),
             (r"콜라보|복각|이벤트", "콜라보·이벤트 정보나 참여 경험을 언급"),
             (r"コラボキャラが恒常より|コラボ以外", "콜라보 캐릭터와 기존 캐릭터의 성능 격차, 콜라보 외 콘텐츠의 매력을 평가"),
             (r"CODE GEASS|反叛的魯路修|反叛者", "코드 기어스 콜라보와 신규 캐릭터 정보를 공유"),
             (r"活動裝備|合作.*裝備", "콜라보 장비를 뽑을지 질문"),
         ],
         "meta": [
+            (r"パワーバランスがおかしい|PVP.{0,80}低ランク", "PvP 성능 격차와 강한 적 때문에 낮은 랭크에 머문다고 지적"),
+            (r"PVP", "PvP에서 쓸 캐릭터 성능과 선택을 논의"),
             (r"장비|캐릭|덱|육성|밸런스", "캐릭터·장비·덱 구성이나 육성 방향을 논의"),
-            (r"パワーバランスがおかしい|PVP", "PvP 성능 격차와 강한 적 때문에 낮은 랭크에 머문다고 지적"),
             (r"隊伍怎麼組|練角|優先練誰", "어떤 캐릭터를 키우고 팀을 꾸릴지 조언을 요청"),
             (r"裝備|角色|キャラ|อุปกรณ์", "캐릭터·장비 선택이나 성능을 논의"),
         ],
@@ -375,6 +509,7 @@ def mention_summary(post: dict, category: str) -> str:
             (r"回鍋|復帰|กลับมาเล่น", "복귀 후 육성 방향을 질문"),
         ],
         "social": [
+            (r"หากิล|กิลด์.*รับ|รับคนเข้า", "길드 가입처를 찾거나 신규 길드원을 모집"),
             (r"길드|친구|모집", "길드·친구 모집이나 교류를 언급"),
             (r"招生|招募|收人|ギルド|กิลด์", "길드 가입자를 모집하고 참여 조건을 안내"),
             (r"求個好友|好友|友達|เพื่อน", "게임 친구를 찾거나 교류를 요청"),
@@ -424,7 +559,7 @@ def build_summary(posts: list[dict], sources: dict) -> dict:
                 direction = "부정이 우세" if status == "negative" else "긍정이 우세" if status == "positive" else "긍정·부정이 비슷함"
                 summary = f"{direction}. " + ("주요 언급: " + "·".join(top_signals) + ". " if top_signals else "") + f"긍정 {counts['positive']} · 부정 {counts['negative']}건."
             categories[country][category] = {"status": status, "summary": summary, "total": len(matching), "counts": {k: counts[k] for k in ["positive", "negative", "mixed", "neutral"]}, "evidence": [{"title": p["title"], "mention": mention_summary(p, category), "url": p["url"], "published_at": p["published_at"], "sentiment": p["category_sentiments"].get(category, "neutral"), "basis": p["basis"] if p["category_sentiments"].get(category) == p["sentiment"] else "전체 별점과 이 주제 평가를 구분", "source": p["source"], "source_id": p["source_id"], "snippet_only": p.get("snippet_only", False), "date_approximate": p.get("date_approximate", False)} for p in matching]}
-    return {"updated_at": now().isoformat(), "window_days": WINDOW_DAYS, "sources": sources, "categories": categories, "post_count": len(recent), "posts": recent[:100], "method": "일본 별점 1–2 부정 / 4–5 긍정. 태국·대만·한국은 명시적 평가 표현 사전. 네이버 카페는 검색에 노출된 제목·미리보기만 분석. 긍·부정 합계 2건 이상일 때만 방향을 제시."}
+    return {"updated_at": now().isoformat(), "window_days": WINDOW_DAYS, "sources": sources, "categories": categories, "post_count": len(recent), "posts": recent[:180], "method": "일본 리뷰는 별점, 그 외 글은 명시적 평가 표현 사전으로 판정. Facebook은 공개 검색·게시글 미리보기, X는 공개 게시글 본문을 사용. 검색 미리보기의 날짜는 추정치. 긍·부정 합계 2건 이상일 때만 방향을 제시."}
 
 
 def refresh() -> dict:
@@ -434,24 +569,30 @@ def refresh() -> dict:
             return _cache
         _refreshing = True
         previous = _cache
-    posts_by_country = {c: [p for p in previous.get("posts", []) if p["country"] == c] for c in SOURCE_URLS}
-    sources = {}
-    collectors = {"th": collect_th, "tw": collect_tw, "jp": collect_jp, "kr": collect_kr}
+    posts_by_source = {sid: [p for p in previous.get("posts", []) if p.get("source_id") == sid] for sid in SOURCE_DEFS}
+    source_details = {}
+    collectors = {"pantip-search": collect_th, "facebook-th": collect_fb_th, "bahamut": collect_tw, "facebook-tw": collect_fb_tw, "spgame": collect_jp, "x-jp": collect_x_jp, "naver-kr": collect_kr}
     try:
-        with ThreadPoolExecutor(max_workers=4) as pool:
-            futures = {pool.submit(fn): c for c, fn in collectors.items()}
+        with ThreadPoolExecutor(max_workers=6) as pool:
+            futures = {pool.submit(fn): sid for sid, fn in collectors.items()}
             for future in as_completed(futures):
-                country = futures[future]
+                sid = futures[future]
+                country, url = SOURCE_DEFS[sid]
                 try:
                     fresh = future.result()
-                    if not fresh:
-                        raise RuntimeError("관련 게시물이 0건입니다")
-                    posts_by_country[country] = fresh
-                    sources[country] = {"status": "ok", "count": len(fresh), "url": SOURCE_URLS[country], "fetched_at": now().isoformat()}
+                    posts_by_source[sid] = fresh
+                    source_details[sid] = {"status": "ok", "count": len(fresh), "url": url, "fetched_at": now().isoformat()}
                 except Exception as exc:
-                    old = previous.get("sources", {}).get(country, {})
-                    sources[country] = {"status": "stale" if posts_by_country[country] else "error", "count": len(posts_by_country[country]), "url": SOURCE_URLS[country], "fetched_at": old.get("fetched_at"), "error": clean(str(exc), 160)}
-        result = build_summary([p for group in posts_by_country.values() for p in group], sources)
+                    old = previous.get("source_details", {}).get(sid, previous.get("sources", {}).get(country, {}))
+                    source_details[sid] = {"status": "stale" if posts_by_source[sid] else "error", "count": len(posts_by_source[sid]), "url": url, "fetched_at": old.get("fetched_at"), "error": clean(str(exc), 160)}
+        sources = {}
+        for country, main_url in SOURCE_URLS.items():
+            parts = [source_details[sid] for sid, (home, _) in SOURCE_DEFS.items() if home == country]
+            states = {part["status"] for part in parts}
+            status = "ok" if states == {"ok"} else "partial" if "ok" in states else "stale" if "stale" in states else "error"
+            sources[country] = {"status": status, "count": sum(part["count"] for part in parts), "url": main_url, "fetched_at": max((part.get("fetched_at") or "" for part in parts), default="") or None}
+        result = build_summary([p for group in posts_by_source.values() for p in group], sources)
+        result["source_details"] = source_details
         with _lock:
             _cache = result
         try:
@@ -475,7 +616,7 @@ class Handler(SimpleHTTPRequestHandler):
             with _lock:
                 current = _cache
                 updating = _refreshing
-            retry_seconds = 60 if any(x.get("status") == "error" for x in current.get("sources", {}).values()) else TTL_SECONDS
+            retry_seconds = 60 if any(x.get("status") in {"error", "partial"} for x in current.get("sources", {}).values()) else TTL_SECONDS
             expired = not current.get("updated_at") or (now() - datetime.fromisoformat(current["updated_at"])).total_seconds() >= retry_seconds
             result = refresh() if (params.get("refresh") == ["1"] or expired) and not updating else current
             payload = json.dumps({**result, "refreshing": updating}, ensure_ascii=False).encode("utf-8")
@@ -499,7 +640,7 @@ def main():
     if args.refresh_only:
         result = refresh()
         print(json.dumps({"updated_at": result["updated_at"], "post_count": result["post_count"], "sources": result["sources"]}, ensure_ascii=False))
-        if not any(source["status"] == "ok" for source in result["sources"].values()):
+        if not any(source["status"] == "ok" for source in result["source_details"].values()):
             raise SystemExit("모든 출처 수집 실패")
         return
     server = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
