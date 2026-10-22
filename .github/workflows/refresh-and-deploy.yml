@@ -2,8 +2,11 @@ name: Refresh community data and deploy
 
 on:
   schedule:
-    # 01:00 UTC = 10:00 KST, every day.
+    # 01:00 UTC = 10:00 KST. GitHub may delay or drop scheduled runs,
+    # so later slots retry only if today's collection is still incomplete.
     - cron: '0 1 * * *'
+    - cron: '17,47 1 * * *'
+    - cron: '17 2 * * *'
   workflow_dispatch:
   push:
     branches: [main]
@@ -26,15 +29,25 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: Check whether a refresh is needed
+        id: freshness
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: python3 .github/scripts/refresh_gate.py >> "$GITHUB_OUTPUT"
       - uses: actions/setup-python@v5
+        if: steps.freshness.outputs.refresh == 'true'
         with:
           python-version: '3.12'
           cache: pip
-      - run: pip install -r requirements.txt
-      - run: python -m playwright install --with-deps chromium
+      - if: steps.freshness.outputs.refresh == 'true'
+        run: pip install -r requirements.txt
+      - if: steps.freshness.outputs.refresh == 'true'
+        run: python -m playwright install --with-deps chromium
       - name: Collect public posts
+        if: steps.freshness.outputs.refresh == 'true'
         run: python server.py --refresh-only
       - name: Save latest data in the repository
+        if: steps.freshness.outputs.refresh == 'true'
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
@@ -44,11 +57,14 @@ jobs:
             git push
           fi
       - name: Prepare static site
+        if: steps.freshness.outputs.refresh == 'true'
         run: |
           mkdir public
           cp index.html latest-cache.json public/
       - uses: actions/upload-pages-artifact@v3
+        if: steps.freshness.outputs.refresh == 'true'
         with:
           path: public
       - id: deployment
+        if: steps.freshness.outputs.refresh == 'true'
         uses: actions/deploy-pages@v4

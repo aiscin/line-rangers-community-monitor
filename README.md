@@ -2,9 +2,9 @@
 
 ## 공개 페이지와 자동 갱신
 
-공개 사이트는 GitHub Pages에서 `index.html`과 `latest-cache.json`을 제공합니다. `.github/workflows/refresh-and-deploy.yml`이 매일 **오전 10:00 KST(01:00 UTC)**에 `server.py --refresh-only`를 실행하고 데이터를 다시 배포합니다. GitHub Actions의 예약 실행은 서비스 상황에 따라 몇 분 지연될 수 있습니다. 워크플로의 `Run workflow`로 수동 실행도 가능합니다.
+공개 사이트는 GitHub Pages에서 `index.html`과 `latest-cache.json`을 제공합니다. `.github/workflows/refresh-and-deploy.yml`이 매일 **오전 10:00 KST(01:00 UTC)**에 `server.py --refresh-only`를 실행하고 데이터를 다시 배포합니다. GitHub Actions 예약 실행은 지연되거나 누락될 수 있어 **10:17, 10:47, 11:17 KST**에 백업 실행을 등록했습니다. 백업 실행은 그날 09:45 이후 모든 출처의 수집이 성공한 경우 건너뛰고, 일부 출처가 실패했다면 다시 시도합니다. 워크플로의 `Run workflow`로 수동 실행도 가능합니다.
 
-공개 페이지의 `최신 데이터 확인` 버튼은 이미 배포된 JSON을 다시 읽습니다. 수집 자체는 예약 작업에서 실행되며, 페이지를 열어 둔 경우 15분마다 새 JSON을 확인합니다. 출처 수집 실패 시 이전 글을 유지하고 출처 상태를 `이전 자료`로 표시합니다. 자동화 실행 기록은 GitHub Actions에서 확인할 수 있습니다.
+공개 페이지의 `최신 데이터 확인` 버튼은 이미 배포된 JSON을 다시 읽습니다. 수집 자체는 예약 작업에서 실행되며, 페이지를 열어 둔 경우 15분마다 새 JSON을 확인합니다. 오전 10:30 이후에도 오늘 자료가 없으면 화면에 수집 지연을 표시합니다. 출처 수집 실패 시 이전 글을 유지하고 출처 상태를 `이전 자료`로 표시합니다. 자동화 실행 기록은 GitHub Actions에서 확인할 수 있습니다. GitHub의 예약 실행은 시각을 보장하지 않으므로 백업 시각에도 누락이 반복되면 외부 스케줄러를 추가해야 합니다.
 
 ## 실행
 
