@@ -562,6 +562,26 @@ def build_summary(posts: list[dict], sources: dict) -> dict:
     return {"updated_at": now().isoformat(), "window_days": WINDOW_DAYS, "sources": sources, "categories": categories, "post_count": len(recent), "posts": recent[:180], "method": "일본 리뷰는 별점, 그 외 글은 명시적 평가 표현 사전으로 판정. Facebook은 공개 검색·게시글 미리보기, X는 공개 게시글 본문을 사용. 검색 미리보기의 날짜는 추정치. 긍·부정 합계 2건 이상일 때만 방향을 제시."}
 
 
+def add_daily_new_posts(result: dict, previous: dict) -> None:
+    """Keep today's discoveries visible across retries without resurfacing old IDs."""
+    seen = dict.fromkeys(previous.get("seen_post_ids") or [p["id"] for p in previous.get("posts", []) if p.get("id")])
+    day = datetime.fromisoformat(result["updated_at"]).astimezone(KST).date().isoformat()
+    carried = previous.get("daily_new_posts", []) if previous.get("daily_new_date") == day else []
+    new_posts = []
+    for post in result["posts"]:
+        ident = post.get("id")
+        if not ident:
+            continue
+        if ident not in seen and post.get("categories") and previous.get("updated_at"):
+            new_posts.append(post)
+        seen[ident] = None
+    by_id = {post["id"]: post for post in [*carried, *new_posts] if post.get("id")}
+    result["daily_new_date"] = day
+    result["daily_new_posts"] = sorted(by_id.values(), key=lambda p: p["published_at"], reverse=True)
+    result["daily_new_count"] = len(result["daily_new_posts"])
+    result["seen_post_ids"] = list(seen)[-5000:]
+
+
 def refresh() -> dict:
     global _cache, _refreshing
     with _lock:
@@ -593,6 +613,7 @@ def refresh() -> dict:
             sources[country] = {"status": status, "count": sum(part["count"] for part in parts), "url": main_url, "fetched_at": max((part.get("fetched_at") or "" for part in parts), default="") or None}
         result = build_summary([p for group in posts_by_source.values() for p in group], sources)
         result["source_details"] = source_details
+        add_daily_new_posts(result, previous)
         with _lock:
             _cache = result
         try:
