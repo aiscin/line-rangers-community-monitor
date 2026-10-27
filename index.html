@@ -20,10 +20,14 @@
   <style>
     .new-feed{background:linear-gradient(115deg,#eef4ff,#fff 42%);border:1px solid #cfdcf4;border-radius:20px;box-shadow:var(--shadow);padding:23px 25px;margin-bottom:22px}.new-feed-head{display:flex;align-items:center;justify-content:space-between;gap:18px}.new-feed h2{font-size:21px;letter-spacing:-.04em;margin:4px 0}.new-feed-head p{font-size:11px;color:#718198;margin:0}.new-feed-total{flex:none;background:#3d69dc;color:#fff;border-radius:999px;padding:8px 13px;font-size:11px;font-weight:900}.new-feed-meta{color:#718198;font-size:11px;margin:15px 0 12px}.new-feed-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.new-post{display:flex;gap:10px;min-width:0;background:#fff;border:1px solid #e1e9f5;border-radius:12px;padding:13px}.new-post-body{min-width:0}.new-post a{display:block;color:#355ca8;font-weight:850;font-size:12px;line-height:1.45;text-decoration:underline;text-underline-offset:2px}.new-post p{color:#34465f;font-size:11px;margin:5px 0}.new-post-meta{font-size:10px;color:#8796aa;line-height:1.5}.new-feed-empty{grid-column:1/-1;color:#718198;background:#fff;border:1px dashed #cfdcf4;border-radius:11px;padding:20px;font-size:12px;text-align:center}@media(max-width:760px){.new-feed{padding:18px}.new-feed-head{align-items:flex-start}.new-feed h2{font-size:18px}.new-feed-grid{grid-template-columns:1fr}}
   </style>
+  <style>
+    .language-control{display:flex;align-items:center;gap:7px;color:var(--muted);white-space:nowrap}.language-control select{max-width:130px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);padding:6px 8px;font-size:12px;font-weight:750;cursor:pointer}.language-control select:focus-visible{outline:3px solid var(--blue);outline-offset:2px}.translation-status{margin:10px 0 -15px;text-align:right;color:#66758b;font-size:11px}.translation-status[hidden]{display:none}@media(max-width:760px){.topright{gap:8px}.topright>span:not(.timezone){display:none}.language-control span{display:none}.language-control select{max-width:108px}.brand{gap:7px;font-size:12px}.brandmark{flex:none}}
+  </style>
 </head>
 <body>
 <div class="shell">
-  <header class="topbar"><div class="brand"><span class="brandmark" aria-hidden="true"></span><span>RANGERS <b>SIGNAL DESK</b></span><span>/ COMMUNITY WATCH</span></div><div class="topright"><span><i class="live-dot"></i>원문 바로가기</span><span class="timezone">KST <strong id="clock">--:--</strong></span></div></header>
+  <header class="topbar"><div class="brand" data-no-translate><span class="brandmark" aria-hidden="true"></span><span>RANGERS <b>SIGNAL DESK</b></span><span>/ COMMUNITY WATCH</span></div><div class="topright"><label class="language-control" for="language-select"><span>언어</span><select id="language-select" aria-label="표시 언어"><option value="ko">한국어</option><option value="ja">日本語</option><option value="zh-TW">繁體中文</option><option value="th">ภาษาไทย</option></select></label><span><i class="live-dot"></i>원문 바로가기</span><span class="timezone">KST <strong id="clock">--:--</strong></span></div></header>
+  <div id="translation-status" class="translation-status" role="status" aria-live="polite" hidden></div>
   <section class="intro"><div><div class="eyebrow">LINE Rangers · community source map</div><h1>네 시장의 목소리를<br><em>한 화면에서.</em></h1><p>태국·대만·일본·한국 커뮤니티의 공개 글과 네이버 검색 미리보기를 가져와 이슈별 반응을 정리합니다. 각 근거 링크에서 원문을 확인할 수 있습니다.</p></div><div class="intro-note"><b>15분 간격 자동 갱신</b>긍정·부정은 별점 또는 명시적 표현을 이용한 간이 판정입니다. 글이 적거나 평가가 불명확하면 ‘자료 부족’으로 남기며, 게시글 수집 시각과 작성일을 구분합니다.</div></section>
   <section class="new-feed" aria-labelledby="new-feed-title" aria-live="polite"><div class="new-feed-head"><div><div class="eyebrow">New since last collection</div><h2 id="new-feed-title">최근 갱신에 추가된 글</h2><p>앞선 수집 기록에 없던 관련 글만 모았습니다. 국가·카테고리 선택에도 맞춰집니다.</p></div><span class="new-feed-total" id="new-feed-total">확인 중</span></div><div class="new-feed-meta" id="new-feed-meta">새 글을 불러오는 중입니다.</div><div class="new-feed-grid" id="new-feed-grid"><div class="new-feed-empty">수집 결과를 기다리는 중입니다.</div></div></section>
   <div class="workspace"><nav class="side" aria-label="국가 및 주제 필터"><div class="label">Markets</div><button class="country active" data-country="all" type="button"><span>◉ 전체</span><small id="count-all">0</small></button><button class="country" data-country="th" type="button"><span>TH 태국</span><small id="count-th">0</small></button><button class="country" data-country="tw" type="button"><span>TW 대만</span><small id="count-tw">0</small></button><button class="country" data-country="jp" type="button"><span>JP 일본</span><small id="count-jp">0</small></button><button class="country" data-country="kr" type="button"><span>KR 한국</span><small id="count-kr">0</small></button><div class="side-rule"></div><div class="label">Issue filters</div><div id="topic-filters"></div></nav>
@@ -105,6 +109,146 @@ function isDailyRefreshLate(updatedAt){const offset=9*60*60*1000;const current=n
 function renderLive(){if(!liveData)return;renderNewFeed();const countries=country==='all'?['th','tw','jp','kr']:[country];const cats=topic==='all'?Object.keys(topics).filter(k=>k!=='all'):[topic];const delayed=staticMode&&isDailyRefreshLate(liveData.updated_at);const health=Object.entries(liveData.sources||{}).map(([code,x])=>`<span class="source-health ${x.status==='ok'?'':'warn'}">${regions[code].name} ${x.status==='ok'?'정상':x.status==='stale'?'이전 자료':x.status==='partial'?'일부 출처 실패':'수집 실패'} · ${x.count}건</span>`).join('');const at=liveData.updated_at?new Date(liveData.updated_at).toLocaleString('ko-KR',{timeZone:'Asia/Seoul',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}):'확인 중';document.querySelector('#live-meta').innerHTML=`${delayed?'<span class="source-health warn">오늘 자동 수집 지연 · 재시도 대기 중</span>':''}<span>마지막 수집 ${esc(at)} KST</span><span>최근 ${liveData.window_days}일 · ${liveData.post_count}건</span>${health}`;document.querySelector('#live-method').textContent=liveData.method+' 자동 판정은 참고용이며, 자료 부족은 긍·부정 표본이 2건 미만임을 뜻합니다.';document.querySelector('#live-grid').innerHTML=cats.map(k=>`<div class="sentiment-row"><h3>${topics[k][0]}</h3><div class="sentiment-countries ${countries.length===1?'single':''}">${countries.map(c=>{const x=liveData.categories?.[c]?.[k]||{status:'insufficient',summary:'자료가 없습니다.',total:0,evidence:[]};const src=liveData.sources?.[c];const evidence=evidenceHtml(x.evidence||[]);return `<div class="sentiment-cell"><div class="sentiment-cell-head"><b>${regions[c].name}</b><span class="sentiment-pill ${x.status}">${statusText[x.status]}</span><small style="color:#9aa8b8">${x.total}건</small></div><p>${esc(src?.status==='error'?'이 출처의 수집이 실패했습니다. 원문 링크에서 확인해 주세요.':x.summary)}</p>${evidence}</div>`}).join('')}</div></div>`).join('');render()}
 async function loadLive(force=false){if(loadingLive)return;loadingLive=true;const button=document.querySelector('#live-refresh');button.disabled=true;button.textContent='갱신 중…';if(!liveData)document.querySelector('#live-grid').innerHTML='<div class="live-empty">태국·대만·일본·한국의 공개 글을 불러오는 중입니다. 첫 조회에는 20~40초가 걸릴 수 있습니다.</div>';try{const response=await fetch(staticMode?'./latest-cache.json?t='+Date.now():'/api/summary'+(force?'?refresh=1':''),{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);liveData=await response.json();if(!liveData.updated_at)throw new Error('수집 결과가 아직 준비되지 않았습니다');renderLive()}catch(e){if(!liveData)document.querySelector('#live-grid').innerHTML=staticMode?'<div class="live-empty">게시글 데이터를 불러오지 못했습니다. 잠시 후 다시 확인해 주세요.</div>':'<div class="live-empty">연동 서버에 연결할 수 없습니다. 프로젝트 폴더에서 <b>python3 server.py</b>를 실행한 뒤 http://127.0.0.1:8765 를 열어 주세요.</div>';document.querySelector('#live-meta').innerHTML=`<span>갱신 실패 · ${esc(e.message)}</span>`}finally{loadingLive=false;button.disabled=false;button.textContent=staticMode?'최신 데이터 확인 ↻':'지금 갱신 ↻'}}
 document.querySelector('#live-refresh').addEventListener('click',()=>loadLive(true));document.querySelectorAll('.country').forEach(button=>button.addEventListener('click',renderLive));document.querySelector('#topic-filters').addEventListener('click',renderLive);setInterval(()=>loadLive(),15*60*1000);loadLive();
+</script>
+<script>
+// Translate visible page text, including data added after each collection refresh.
+// Original post links and the Korean source strings remain available when Korean is selected.
+(() => {
+  const select = document.querySelector('#language-select');
+  const status = document.querySelector('#translation-status');
+  const supported = new Set(['ko', 'ja', 'zh-TW', 'th']);
+  const saved = (() => { try { return localStorage.getItem('rangers-language'); } catch { return null; } })();
+  const browser = navigator.language.toLowerCase();
+  let language = supported.has(saved) ? saved : browser.startsWith('ja') ? 'ja' : browser.startsWith('th') ? 'th' : browser.startsWith('zh') && (browser.includes('tw') || browser.includes('hk')) ? 'zh-TW' : 'ko';
+  const original = new WeakMap(), displayed = new WeakMap(), cache = new Map();
+  let generation = 0, timer = 0, working = false, queued = false;
+  const messages = {
+    ja: ['翻訳中…', '自動翻訳です。投稿の原文はリンク先でご確認ください。', '一部を翻訳できませんでした。原文を表示しています。'],
+    'zh-TW': ['翻譯中…', '此頁使用自動翻譯。請從連結查看貼文原文。', '部分內容無法翻譯，已顯示原文。'],
+    th: ['กำลังแปล…', 'หน้านี้ใช้การแปลอัตโนมัติ โปรดตรวจสอบต้นฉบับที่ลิงก์', 'แปลบางส่วนไม่สำเร็จ จึงแสดงข้อความต้นฉบับ']
+  };
+  const fixed = {
+    ja: {'네 시장의 목소리를':'4つの地域の声を', '한 화면에서.':'ひとつの画面で。', 'TH 태국':'TH タイ', 'TW 대만':'TW 台湾', 'JP 일본':'JP 日本', 'KR 한국':'KR 韓国'},
+    'zh-TW': {'네 시장의 목소리를':'一次掌握四個地區的玩家心聲', '한 화면에서.':'盡在同一畫面。', 'TH 태국':'TH 泰國', 'TW 대만':'TW 台灣', 'JP 일본':'JP 日本', 'KR 한국':'KR 韓國'},
+    th: {'네 시장의 목소리를':'เสียงผู้เล่นจาก 4 ประเทศ', '한 화면에서.':'ในหน้าเดียว', 'TH 태국':'TH ไทย', 'TW 대만':'TW ไต้หวัน', 'JP 일본':'JP ญี่ปุ่น', 'KR 한국':'KR เกาหลีใต้'}
+  };
+  const pageTitles = {ko:'Rangers Signal Desk · 국가별 커뮤니티 모니터', ja:'Rangers Signal Desk · 国別コミュニティモニター', 'zh-TW':'Rangers Signal Desk · 各地社群監測', th:'Rangers Signal Desk · ติดตามชุมชนแยกตามประเทศ'};
+  const placeholders = {ko:'예: 콜라보, 로그인, PvP', ja:'例：コラボ、ログイン、PvP', 'zh-TW':'例如：合作活動、登入、PvP', th:'เช่น คอลแลบ, เข้าสู่ระบบ, PvP'};
+  function updateAttributes() {
+    document.title = pageTitles[language];
+    document.querySelector('#query').placeholder = placeholders[language];
+    select.setAttribute('aria-label', {ko:'표시 언어',ja:'表示言語','zh-TW':'顯示語言',th:'ภาษาที่แสดง'}[language]);
+  }
+  const skip = node => !!node.parentElement?.closest('script,style,select,option,[data-no-translate],#translation-status');
+  const translatable = value => /[\p{L}]/u.test(value) && !/^(?:RANGERS\s*SIGNAL DESK|KST|LINE Rangers|[A-Z]{1,3})$/u.test(value.trim());
+  function nodesIn(root) {
+    const found = [];
+    if (root.nodeType === Node.TEXT_NODE) found.push(root);
+    else if (root.nodeType === Node.ELEMENT_NODE) {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      while (walker.nextNode()) found.push(walker.currentNode);
+    }
+    return found.filter(node => !skip(node) && translatable(node.nodeValue));
+  }
+  function sourceLanguage(value) {
+    if (/[가-힣]/u.test(value)) return 'ko';
+    if (/[\u3040-\u30ff]/u.test(value)) return 'ja';
+    if (/[ก-๙]/u.test(value)) return 'th';
+    if (/[\u3400-\u9fff]/u.test(value)) return 'zh-TW';
+    return 'en';
+  }
+  const keyFor = (from, value) => `${language}\u0000${from}\u0000${value}`;
+  function setText(node, value) { if (node.nodeValue !== value) { displayed.set(node, value); node.nodeValue = value; } }
+  function setStatus(index) {
+    status.hidden = language === 'ko';
+    if (!status.hidden) status.textContent = messages[language][index];
+  }
+  async function translateBatch(from, values, target) {
+    const separator = '\n⟦LRS_2026_SPLIT⟧\n';
+    const url = new URL('https://translate.googleapis.com/translate_a/single');
+    url.search = new URLSearchParams({client:'gtx', sl:from, tl:target, dt:'t', q:values.join(separator)});
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    try {
+      const response = await fetch(url, {signal:controller.signal});
+      if (!response.ok) throw new Error(`Translation HTTP ${response.status}`);
+      const data = await response.json();
+      const result = data[0].map(part => part[0]).join('').split(/\s*⟦LRS_2026_SPLIT⟧\s*/u);
+      if (result.length !== values.length) throw new Error('Translation segments did not match');
+      return result.map(text => text.trim());
+    } finally { clearTimeout(timeout); }
+  }
+  function batches(values) {
+    const result = []; let batch = [], length = 0;
+    for (const value of values) {
+      if (batch.length && (batch.length >= 14 || length + value.length > 850)) { result.push(batch); batch = []; length = 0; }
+      batch.push(value); length += value.length;
+    }
+    if (batch.length) result.push(batch);
+    return result;
+  }
+  async function run() {
+    if (working) { queued = true; return; }
+    working = true;
+    do {
+      queued = false;
+      const target = language, version = generation, pending = new Map();
+      for (const node of nodesIn(document.body)) {
+        const current = node.nodeValue;
+        if (!original.has(node) || (displayed.has(node) && current !== displayed.get(node))) original.set(node, current);
+        const raw = original.get(node);
+        if (target === 'ko') { setText(node, raw); continue; }
+        const match = raw.match(/^(\s*)([\s\S]*?)(\s*)$/u);
+        const value = match[2];
+        if (!translatable(value)) continue;
+        if (fixed[target]?.[value]) { setText(node, match[1] + fixed[target][value] + match[3]); continue; }
+        const from = sourceLanguage(value), key = keyFor(from, value);
+        if (cache.has(key)) { setText(node, match[1] + cache.get(key) + match[3]); continue; }
+        if (!pending.has(from)) pending.set(from, new Map());
+        const group = pending.get(from);
+        if (!group.has(value)) group.set(value, []);
+        group.get(value).push([node, match[1], match[3]]);
+      }
+      if (target === 'ko') { status.hidden = true; continue; }
+      const jobs = [...pending].flatMap(([from, group]) => batches([...group.keys()]).map(values => ({from, group, values})));
+      if (!jobs.length) { setStatus(1); continue; }
+      setStatus(0);
+      let failed = false, next = 0;
+      await Promise.all(Array.from({length:Math.min(4,jobs.length)}, async () => {
+        while (next < jobs.length && version === generation) {
+          const job = jobs[next++];
+          try {
+            const translated = await translateBatch(job.from, job.values, target);
+            if (version !== generation) break;
+            job.values.forEach((value, index) => {
+              cache.set(`${target}\u0000${job.from}\u0000${value}`, translated[index]);
+              for (const [node, before, after] of job.group.get(value))
+                if (node.isConnected && original.get(node)?.trim() === value) setText(node, before + translated[index] + after);
+            });
+          } catch { failed = true; }
+        }
+      }));
+      if (version === generation) setStatus(failed ? 2 : 1);
+    } while (queued);
+    working = false;
+  }
+  function schedule() { clearTimeout(timer); timer = setTimeout(run, 100); }
+  const observer = new MutationObserver(records => {
+    if (records.some(record => record.type === 'childList' ? [...record.addedNodes].some(node => nodesIn(node).length) : record.target.nodeValue !== displayed.get(record.target))) schedule();
+  });
+  observer.observe(document.body, {childList:true, subtree:true, characterData:true});
+  select.value = language;
+  document.documentElement.lang = language;
+  updateAttributes();
+  select.addEventListener('change', () => {
+    language = select.value; generation++;
+    document.documentElement.lang = language;
+    updateAttributes();
+    try { localStorage.setItem('rangers-language', language); } catch {}
+    schedule();
+  });
+  schedule();
+})();
 </script>
 </body>
 </html>
